@@ -6,7 +6,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>@yield('title', 'Dashboard Admin')</title>
+    @php
+        use App\Models\Setting;
+        $adminLogo = Setting::getAssetUrl('school.assets.logo', 'images/logo sekolah.png');
+        $adminSchoolName = Setting::get('school.identity.name', 'SMP NEGERI 1 PIRIME');
+    @endphp
+    <title>@yield('title', 'Dashboard Admin') | {{ $adminSchoolName }}</title>
+    <link rel="icon" href="{{ $adminLogo }}" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,12 +30,12 @@
                 extend: {
                     colors: {
                         primary: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                            900: '#0f2851',
+                            50: '#eef3f8',
+                            100: '#dce6f0',
+                            500: '#2e5070',
+                            600: '#1f3f5e',
+                            700: '#173a63',
+                            900: '#0a2540',
                         },
                     }
                 }
@@ -38,6 +44,11 @@
     </script>
 
     <style>
+        [class~="bg-indigo-600"], [class~="bg-blue-600"] { background-color: #173A63 !important; }
+        [class~="bg-indigo-700"], [class~="bg-blue-700"] { background-color: #0A2540 !important; }
+        [class~="text-indigo-600"], [class~="text-blue-600"] { color: #173A63 !important; }
+        [class~="text-indigo-700"], [class~="text-blue-700"] { color: #0A2540 !important; }
+        [class~="border-indigo-600"], [class~="border-blue-600"] { border-color: #D4AF37 !important; }
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -63,12 +74,12 @@
         {{-- Sidebar --}}
         <aside class="w-64 bg-slate-900 text-slate-100 hidden md:flex md:flex-col overflow-y-auto">
             <div class="px-5 py-5 border-b border-slate-800 flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                    <i class="fas fa-school"></i>
+                    <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-hidden">
+                <img src="{{ $adminLogo }}" alt="Logo {{ $adminSchoolName }}" class="h-full w-full object-contain p-1">
                 </div>
                 <div>
                     <div class="font-bold text-sm leading-tight">Admin Panel</div>
-                    <div class="text-xs text-slate-400">SMP NEGERI 1 PIRIME</div>
+                    <div class="text-xs text-slate-400">{{ $adminSchoolName }}</div>
                 </div>
             </div>
 
@@ -164,7 +175,7 @@
                     Lihat Website
                 </a>
                 <div class="px-3 py-3 text-xs text-slate-400 border border-slate-800 rounded-xl mt-2">
-                    <div class="font-semibold text-slate-200">SMP NEGERI 1 PIRIME</div>
+                    <div class="font-semibold text-slate-200">{{ $adminSchoolName }}</div>
                     <div class="mt-1">Pirime, Lanny Jaya, Papua Pegunungan</div>
                 </div>
             </div>
@@ -208,12 +219,12 @@
                 class="fixed top-0 left-0 h-full w-64 bg-slate-900 text-slate-100 z-50 transform -translate-x-full transition-transform md:hidden overflow-y-auto">
                 <div class="px-5 py-5 border-b border-slate-800 flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                            <i class="fas fa-school"></i>
+                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-hidden">
+                            <img src="{{ $adminLogo }}" alt="Logo {{ $adminSchoolName }}" class="h-full w-full object-contain p-1">
                         </div>
                         <div>
                             <div class="font-bold text-sm leading-tight">Admin Panel</div>
-                            <div class="text-xs text-slate-400">SMP NEGERI 1 PIRIME</div>
+                            <div class="text-xs text-slate-400">{{ $adminSchoolName }}</div>
                         </div>
                     </div>
                     <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white p-1">

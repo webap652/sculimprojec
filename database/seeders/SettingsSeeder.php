@@ -71,6 +71,11 @@ class SettingsSeeder extends Seeder
 
             // PPDB
             'ppdb.online_url' => '#',
+            'ppdb_open' => true,
+            'ppdb_academic_year' => '2026/2027',
+            'ppdb_close_message' => 'Pendaftaran PPDB/SPMB Tahun Ajaran 2026/2027 saat ini telah ditutup. Mohon menunggu informasi pendaftaran peserta didik baru berikutnya. Terima kasih atas perhatian dan pengertiannya.',
+            'ppdb_start_date' => null,
+            'ppdb_end_date' => null,
 
             // Sistem
             'system.maintenance.enabled' => false,

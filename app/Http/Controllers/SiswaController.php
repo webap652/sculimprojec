@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pendaftar;
 use App\Models\Pengumuman;
+use App\Models\Setting;
 use Dompdf\Dompdf;
 
 class SiswaController extends Controller
@@ -18,12 +19,23 @@ class SiswaController extends Controller
 
     public function formPendaftaran()
     {
+        if (!Setting::ppdbIsOpen()) {
+            return view('siswa.pendaftaran-ditutup', [
+                'academicYear' => Setting::ppdbAcademicYear(),
+                'closeMessage' => Setting::ppdbCloseMessage(),
+            ]);
+        }
+
         $pendaftar = Pendaftar::where('user_id', auth()->id())->first();
-        return view('siswa.ppdb.create', compact('pendaftar'));
+        return view('siswa.form', ['data' => $pendaftar]);
     }
 
     public function simpanPendaftaran(Request $r)
     {
+        if (!Setting::ppdbIsOpen()) {
+            return back()->with('error', 'Pendaftaran PPDB/SPMB saat ini telah ditutup.');
+        }
+
         $validated = $r->validate([
             'nama_lengkap' => 'required|string|max:255',
             'nik' => 'required|string|max:16',
@@ -60,9 +72,12 @@ class SiswaController extends Controller
             'kartu_nisn' => 'nullable|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
 
+        $fileFields = ['foto_profil', 'foto', 'kk', 'akte', 'ijazah', 'kartu_nisn'];
+        $pendaftarData = collect($validated)->except($fileFields)->all();
+
         $pendaftar = Pendaftar::updateOrCreate(
             ['user_id' => auth()->id()],
-            $validated
+            $pendaftarData
         );
 
         // Handle file uploads

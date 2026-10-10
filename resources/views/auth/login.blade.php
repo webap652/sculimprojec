@@ -1,10 +1,16 @@
+@php
+    $schoolName = \App\Models\Setting::get('school.identity.name', 'SMP NEGERI 1 PIRIME');
+    $slogan = \App\Models\Setting::get('school.identity.slogan', 'Cerdas, Mandiri, Berkarakter');
+    $logoUrl = \App\Models\Setting::getAssetUrl('school.assets.logo', 'images/logo sekolah.png');
+@endphp
 <!DOCTYPE html>
 <html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - PPDB SMP NEGERI 1 PIRIME</title>
+    <title>Login - {{ $schoolName }}</title>
+    <link rel="icon" href="{{ $logoUrl }}" type="image/png">
 
     <!-- Google Fonts: Inter & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,14 +49,9 @@
     class="min-h-screen flex flex-col items-center justify-center py-10 px-4 sm:px-6 lg:px-8 font-sans antialiased relative overflow-x-hidden text-slate-100 selection:bg-brand-blue selection:text-brand-dark">
 
     <!-- Latar Belakang Gambar Pegunungan Papua dengan Overlay Gelap & Transparan -->
-    <div class="absolute inset-0 w-full h-full -z-20">
-        <!-- Gambar bentang alam pegunungan tinggi berselimut kabut/awan mirip lanskap Papua Pegunungan -->
-        <img src="https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=2070&auto=format&fit=crop"
-            alt="Papua Highlands Landscape"
-            class="w-full h-full object-cover object-center scale-105 filter blur-[1px]">
-        <!-- Gradient Overlay untuk menjaga keterbacaan teks (Cyan to Dark Navy) -->
-        <div
-            class="absolute inset-0 bg-gradient-to-b from-[#173A63]/80 via-[#0A2540]/90 to-[#020617]/95 blend-multiply">
+    <div class="absolute inset-0 w-full h-full -z-20 bg-[#0A2540]">
+        <img src="{{ asset('images/hero-bg/hero bg (2).png') }}" alt="Lingkungan SMP Negeri 1 Pirime" class="h-full w-full object-cover object-center opacity-20">
+        <div class="absolute inset-0 bg-gradient-to-b from-[#0A2540]/90 via-[#0A2540]/95 to-[#06182E]"></div>
         </div>
     </div>
 
@@ -60,7 +61,7 @@
         <!-- Logo Tut Wuri Handayani (Professional Drop Shadow & Hover) -->
         <!-- Logo SMP Negeri 1 Pirime (lokal, biar selalu tampil di HP/laptop) -->
         <div class="mb-4 drop-shadow-[0_10px_20px_rgba(34,211,238,0.25)] transition-all duration-300 hover:scale-105">
-            <img src="{{ asset('images/logo sekolah.png') }}" alt="Logo SMP Negeri 1 Pirime"
+            <img src="{{ $logoUrl }}" alt="Logo {{ $schoolName }}"
                 class="h-20 sm:h-24 w-auto object-contain">
         </div>
 
@@ -70,7 +71,7 @@
         </h2>
         <p
             class="text-xs sm:text-sm font-semibold text-cyan-200/90 text-center mt-1.5 max-w-xs sm:max-w-sm leading-relaxed drop-shadow-sm">
-            Masuk untuk akses dashboard siswa atau admin PPDB
+            {{ $slogan }} · Akses dashboard siswa atau admin PPDB
         </p>
 
         <!-- Navigasi Tab (Sesuai Referensi Gambar - Tab Login Kini Aktif) -->

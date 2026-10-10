@@ -17,7 +17,7 @@
                 </div>
                 <div>
                     <h1 class="text-2xl font-extrabold text-white">Pengumuman</h1>
-                    <p class="text-indigo-100 text-sm">Informasi terbaru dari SMP YPK Kotaraja</p>
+                    <p class="text-indigo-100 text-sm">Informasi terbaru dari SMP NEGERI 1 PIRIME</p>
                 </div>
             </div>
         </div>

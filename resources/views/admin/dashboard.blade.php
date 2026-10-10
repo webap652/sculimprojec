@@ -33,6 +33,11 @@
 
     <div class="max-w-7xl mx-auto space-y-6">
 
+        <div class="flex items-center justify-between rounded-2xl border {{ $ppdbOpen ? 'border-emerald-200 bg-emerald-50' : 'border-rose-200 bg-rose-50' }} px-5 py-4">
+            <div class="flex items-center gap-3"><i class="fas {{ $ppdbOpen ? 'fa-circle-check text-emerald-600' : 'fa-lock text-rose-600' }} text-xl"></i><div><p class="font-bold {{ $ppdbOpen ? 'text-emerald-800' : 'text-rose-800' }}">PPDB/SPMB {{ $ppdbOpen ? 'DIBUKA' : 'DITUTUP' }}</p><p class="text-sm {{ $ppdbOpen ? 'text-emerald-700' : 'text-rose-700' }}">Tahun Ajaran {{ $ppdbAcademicYear }}</p></div></div>
+            <a href="{{ route('admin.system-settings.edit') }}" class="rounded-xl bg-white px-4 py-2 text-sm font-bold text-[#0A2540] shadow-sm">Pengaturan</a>
+        </div>
+
         <!-- Welcome Section -->
         <div
             class="relative bg-gradient-to-r from-indigo-700 via-indigo-600 to-indigo-500 rounded-2xl shadow-sm p-6 sm:p-8 overflow-hidden">
@@ -46,7 +51,7 @@
                         Ini
                     </h1>
                     <p class="text-indigo-50 font-medium text-sm sm:text-base max-w-xl">
-                        Pendaftaran gelombang pertama berjalan lancar. Terdapat
+                        Pendaftaran Tahun Ajaran {{ $ppdbAcademicYear }}. Terdapat
                         <span class="text-white font-bold bg-white/20 px-2 py-0.5 rounded">{{ $waiting }}</span>
                         berkas yang perlu Anda verifikasi segera.
                     </p>

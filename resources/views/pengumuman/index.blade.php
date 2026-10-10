@@ -2,168 +2,65 @@
 
 @section('title', 'Pengumuman - SMP NEGERI 1 PIRIME')
 
-@section('hero')
-    @php
-        $breadcrumb = ['Beranda', 'Pengumuman'];
-    @endphp
-    @include('layouts.partials.public-hero', [
-        'title' => 'PENGUMUMAN',
-        'desc' => 'Pusat informasi resmi SMP Negeri 1 Pirime.',
-        'bg' => '', // Dikosongkan agar tidak ada gambar background bertumpuk
-        'breadcrumb' => $breadcrumb,
-    ])
-@endsection
-
 @section('content')
-    <style>
-        /* Custom Scrollbar Minimalis */
-        .custom-scroll::-webkit-scrollbar { height: 4px; }
-        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
-        .custom-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
-        
-        /* Tab Navigation Minimalis */
-        #pengumumanTabs .nav-link {
-            color: #64748b;
-            font-weight: 600;
-            font-size: 0.9rem;
-            padding: 0.75rem 1.5rem;
-            border-bottom: 2px solid transparent;
-            border-radius: 0;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-        }
-        #pengumumanTabs .nav-link:hover {
-            color: #3b82f6;
-            border-bottom-color: #cbd5e1;
-        }
-        #pengumumanTabs .nav-link.active {
-            color: #2563eb !important;
-            background: transparent !important;
-            border-bottom-color: #2563eb !important;
-        }
-    </style>
+    @php
+        $announcements = $pengumumans ?? collect();
+        $categoryLabels = ['informasi' => 'Sekolah', 'pengumuman' => 'PPDB', 'penting' => 'Penting'];
+    @endphp
 
-    <div class="w-full bg-slate-50 pb-16">
-        
-        <!-- Hero Section Clean & Minimalist -->
-        <div class="bg-white border-b border-slate-200 pt-16 pb-12 px-6">
-            <div class="max-w-7xl mx-auto text-center">
-                <h1 class="text-3xl md:text-5xl font-extrabold text-slate-800 tracking-tight mb-4">
-                    Pusat Informasi & Pengumuman
-                </h1>
-                <p class="text-slate-500 max-w-2xl mx-auto text-base md:text-lg mb-8">
-                    Temukan semua pengumuman resmi, agenda kegiatan, dan jadwal penting sekolah dengan mudah dan cepat.
-                </p>
-
-                <!-- Search Box Clean -->
-                <div class="max-w-xl mx-auto relative">
-                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                        <i class="fas fa-search"></i>
-                    </span>
-                    <input type="text" id="searchPengumuman" placeholder="Cari pengumuman..."
-                        class="w-full py-3.5 pl-12 pr-4 bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-xl text-slate-700 placeholder-slate-400 outline-none transition-all"
-                        onkeyup="filterPengumuman(this.value)">
-                </div>
-            </div>
+    <section class="relative overflow-hidden bg-[#0b2945] py-14 text-white sm:py-20">
+        <div class="absolute inset-0 opacity-25"><img src="{{ asset('images/hero-bg/hero bg (2).png') }}" alt="" class="h-full w-full object-cover"></div>
+        <div class="absolute inset-0 bg-[#0b2945]/80"></div>
+        <div class="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <p class="mb-3 text-xs font-bold uppercase tracking-[.25em] text-[#d9a928]">Informasi Sekolah</p>
+            <h1 class="max-w-2xl text-3xl font-bold tracking-tight sm:text-5xl">Pengumuman</h1>
+            <p class="mt-3 max-w-xl text-sm leading-6 text-slate-200 sm:text-base">Pusat informasi resmi SMP Negeri 1 Pirime.</p>
+            <div class="mt-5 flex items-center gap-2 text-xs text-slate-300"><a href="{{ route('home') }}" class="hover:text-white">Beranda</a><span>/</span><span>Informasi</span><span>/</span><span class="text-[#d9a928]">Pengumuman</span></div>
         </div>
+    </section>
 
-        <!-- Main Content -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
-                <!-- Kiri: Konten Pengumuman -->
-                <div class="lg:col-span-2">
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                        
-                        <!-- Tabs -->
-                        <div class="border-b border-slate-100 bg-white px-2">
-                            <ul class="nav nav-pills flex flex-nowrap overflow-x-auto custom-scroll" id="pengumumanTabs" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="tab-sekolah" data-bs-toggle="pill" data-bs-target="#pane-sekolah" type="button" role="tab">Sekolah</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="tab-ppdb" data-bs-toggle="pill" data-bs-target="#pane-ppdb" type="button" role="tab">PPDB</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="tab-agenda" data-bs-toggle="pill" data-bs-target="#pane-agenda" type="button" role="tab">Agenda</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="tab-jadwal" data-bs-toggle="pill" data-bs-target="#pane-jadwal" type="button" role="tab">Jadwal Ujian</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="tab-download" data-bs-toggle="pill" data-bs-target="#pane-download" type="button" role="tab">Unduhan</button>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Tab Content -->
-                        <div class="p-6">
-                            <div class="tab-content" id="pengumumanTabContent">
-                                <div class="tab-pane fade show active" id="pane-sekolah" role="tabpanel">
-                                    @include('pengumuman._list', ['items' => $sekolahPengumuman])
-                                </div>
-                                <div class="tab-pane fade" id="pane-ppdb" role="tabpanel">
-                                    @include('pengumuman._list', ['items' => $ppdbPengumuman])
-                                </div>
-                                <div class="tab-pane fade" id="pane-agenda" role="tabpanel">
-                                    @include('pengumuman._list', ['items' => $agenda])
-                                </div>
-                                <div class="tab-pane fade" id="pane-jadwal" role="tabpanel">
-                                    @include('pengumuman._list', ['items' => $jadwalUjian])
-                                </div>
-                                <div class="tab-pane fade" id="pane-download" role="tabpanel">
-                                    @include('pengumuman._download', [
-                                        'items' => $sekolahPengumuman->concat($ppdbPengumuman)->concat($agenda)->concat($jadwalUjian),
-                                    ])
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Kanan: Sidebar Clean -->
-                <div class="space-y-6">
-                    
-                    <!-- Pengumuman Penting Minimalis -->
-                    @php $pengumumanPenting = $agenda->first(); @endphp
-                    <div class="bg-red-50 rounded-2xl p-6 border border-red-100">
-                        <div class="flex items-center gap-2 mb-3 text-red-600 font-bold text-sm uppercase tracking-wide">
-                            <i class="fa-solid fa-circle-exclamation"></i> Info Penting
-                        </div>
-                        <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">
-                            {{ $pengumumanPenting ? $pengumumanPenting->judul : 'Belum ada info penting' }}
-                        </h3>
-                        <p class="text-sm text-slate-600 mb-4 line-clamp-3">
-                            {{ $pengumumanPenting ? Str::limit(strip_tags($pengumumanPenting->isi), 100) : 'Saat ini belum ada pengumuman darurat atau penting.' }}
-                        </p>
-                        <a href="{{ $pengumumanPenting ? '#' : '/ppdb' }}" class="text-red-600 font-semibold text-sm hover:underline flex items-center gap-1">
-                            Baca selengkapnya <i class="fa-solid fa-arrow-right text-xs"></i>
-                        </a>
-                    </div>
-
-                    <!-- Agenda Terbaru -->
-                    @if ($agenda->count() > 0)
-                        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                            <h3 class="font-bold text-slate-800 mb-4">Agenda Mendatang</h3>
-                            <div class="space-y-4">
-                                @foreach ($agenda->take(4) as $a)
-                                    <div class="flex items-start gap-3 pb-4 border-b border-slate-50 last:border-0 last:pb-0">
-                                        <div class="bg-slate-50 text-slate-600 rounded-lg p-2 text-center min-w-[3rem] border border-slate-100">
-                                            <div class="text-sm font-bold">{{ optional($a->tanggal_publish)->format('d') ?: '01' }}</div>
-                                            <div class="text-[10px] uppercase">{{ optional($a->tanggal_publish)->format('M') ?: 'JAN' }}</div>
-                                        </div>
-                                        <div>
-                                            <h4 class="text-sm font-semibold text-slate-800 line-clamp-1">{{ $a->judul }}</h4>
-                                            <span class="text-[11px] text-slate-500">{{ ucfirst($a->jenis) }}</span>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-
-                </div>
+    <section class="bg-[#f7f9fc] py-12 sm:py-16">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+                <div><p class="text-xs font-bold uppercase tracking-[.2em] text-[#d9a928]">Papan Informasi</p><h2 class="mt-2 text-2xl font-bold text-[#0b2945] sm:text-3xl">Pengumuman Terkini</h2><p class="mt-2 text-sm text-slate-500">Informasi resmi dan terbaru SMP Negeri 1 Pirime.</p></div>
+                <label class="relative block w-full md:max-w-xs"><span class="sr-only">Cari pengumuman</span><i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i><input id="searchPengumuman" type="search" placeholder="Cari pengumuman..." class="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm text-slate-700 outline-none transition focus:border-[#d9a928] focus:ring-4 focus:ring-[#d9a928]/10"></label>
             </div>
+            <div id="announcementFilters" class="mt-8 flex gap-2 overflow-x-auto pb-2">
+                <button type="button" data-filter="all" class="filter-button shrink-0 rounded-full border border-[#0b2945] bg-[#0b2945] px-4 py-2 text-xs font-bold text-white">Semua</button>
+                @foreach ($categoryLabels as $value => $label)<button type="button" data-filter="{{ $value }}" class="filter-button shrink-0 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 transition hover:border-[#d9a928] hover:text-[#0b2945]">{{ $label }}</button>@endforeach
+            </div>
+
+            @if ($announcements->isNotEmpty())
+                <div id="announcementGrid" class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    @foreach ($announcements as $pengumuman)
+                        <article class="announcement-card group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl" data-category="{{ $pengumuman->jenis }}" data-search="{{ strtolower($pengumuman->judul.' '.strip_tags($pengumuman->isi)) }}">
+                            @if ($pengumuman->gambar)<div class="h-48 overflow-hidden bg-slate-100"><img src="{{ asset('storage/pengumuman/'.$pengumuman->gambar) }}" alt="{{ $pengumuman->judul }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105"></div>@else<div class="flex h-48 items-center justify-center bg-[#0b2945] text-[#d9a928]"><i class="fas fa-bullhorn text-4xl"></i></div>@endif
+                            <div class="flex flex-1 flex-col p-5"><div class="flex items-center justify-between gap-3"><span class="rounded-full bg-[#fff8df] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-[#8a6810]">{{ $categoryLabels[$pengumuman->jenis] ?? ucfirst($pengumuman->jenis) }}</span><time class="shrink-0 text-xs text-slate-400">{{ ($pengumuman->tanggal_publish ?? $pengumuman->created_at)->format('d M Y') }}</time></div><h3 class="mt-4 line-clamp-2 text-lg font-bold leading-snug text-[#0b2945]">{{ $pengumuman->judul }}</h3><p class="mt-3 line-clamp-3 flex-1 text-sm leading-6 text-slate-500">{{ Str::limit(strip_tags($pengumuman->isi), 130) }}</p><a href="{{ route('pengumuman.show', $pengumuman) }}" class="mt-5 inline-flex items-center text-sm font-bold text-[#0b2945] transition group-hover:text-[#b48712]">Baca Selengkapnya <i class="fas fa-arrow-right ml-2 text-xs"></i></a></div>
+                        </article>
+                    @endforeach
+                </div>
+                <div id="noSearchResults" class="mt-8 hidden rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center"><h3 class="font-bold text-[#0b2945]">Pengumuman tidak ditemukan</h3><p class="mt-2 text-sm text-slate-500">Coba gunakan kata kunci lain.</p></div>
+            @else
+                <div class="mt-8 rounded-2xl border border-slate-200 bg-white px-6 py-14 text-center"><h3 class="font-bold text-[#0b2945]">Belum ada pengumuman</h3><p class="mt-2 text-sm text-slate-500">Saat ini belum ada informasi yang tersedia.</p></div>
+            @endif
         </div>
-    </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = [...document.querySelectorAll('.announcement-card')];
+            const buttons = [...document.querySelectorAll('.filter-button')];
+            const search = document.getElementById('searchPengumuman');
+            const empty = document.getElementById('noSearchResults');
+            let category = 'all';
+            function filterCards() {
+                const query = (search?.value || '').toLowerCase().trim();
+                let visible = 0;
+                cards.forEach((card) => { const match = (category === 'all' || card.dataset.category === category) && card.dataset.search.includes(query); card.classList.toggle('hidden', !match); if (match) visible++; });
+                empty?.classList.toggle('hidden', visible > 0);
+            }
+            buttons.forEach((button) => button.addEventListener('click', () => { category = button.dataset.filter; buttons.forEach((item) => item.classList.toggle('bg-[#0b2945]', item === button)); buttons.forEach((item) => item.classList.toggle('text-white', item === button)); filterCards(); }));
+            search?.addEventListener('input', filterCards);
+        });
+    </script>
 @endsection

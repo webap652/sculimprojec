@@ -24,6 +24,9 @@
     ];
 
     $isProfilActive = request()->routeIs($profilRoutes);
+    $isProgramActive = request()->routeIs('program.*');
+    $hasEkstrakurikulerRoute = Route::has('ekstrakurikuler');
+    $isInformasiActive = request()->routeIs('pengumuman*', 'berita');
 @endphp
 
 {{-- Top Contact Ribbon --}}
@@ -136,6 +139,25 @@
                     </div>
                 </div>
 
+                {{-- Program Dropdown --}}
+                <div class="relative" id="program-dropdown-wrap">
+                    <button type="button" id="program-btn"
+                        class="relative flex items-center text-gray-600 hover:text-primary-900 font-medium text-sm py-2 transition-all duration-300 hover:-translate-y-0.5 {{ $isProgramActive ? 'text-primary-900 font-semibold' : '' }}">
+                        Program
+                        <i id="program-chevron" class="fas fa-chevron-down text-[10px] ml-1 mt-0.5 transition-transform duration-300"></i>
+                        <span class="absolute left-0 -bottom-0.5 h-0.5 bg-gold-500 transition-all duration-300 {{ $isProgramActive ? 'w-full' : 'w-0' }}"></span>
+                    </button>
+                    <div id="program-dropdown" class="absolute left-0 top-full mt-2 w-64 rounded-xl bg-white shadow-xl ring-1 ring-black/5 border-t-4 border-gold-500 z-50 overflow-hidden opacity-0 invisible translate-y-2 scale-95 transition-all duration-300 ease-out">
+                        <div class="py-2">
+                            <a href="{{ route('program.unggulan') }}" class="flex items-center px-4 py-3 text-sm font-medium {{ request()->routeIs('program.unggulan') ? 'text-primary-900 bg-primary-50 font-semibold border-l-4 border-gold-500' : 'text-slate-700 hover:bg-blue-50 hover:text-primary-900' }}"><i class="fas fa-lightbulb w-5 text-center mr-2 text-gold-600"></i>Program Unggulan</a>
+                            <a href="{{ route('program.nilai') }}" class="flex items-center px-4 py-3 text-sm font-medium {{ request()->routeIs('program.nilai') ? 'text-primary-900 bg-primary-50 font-semibold border-l-4 border-gold-500' : 'text-slate-700 hover:bg-blue-50 hover:text-primary-900' }}"><i class="fas fa-star w-5 text-center mr-2 text-gold-600"></i>Nilai-Nilai Sekolah</a>
+                            @if ($hasEkstrakurikulerRoute)
+                                <a href="{{ route('ekstrakurikuler') }}" class="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-primary-900"><i class="fas fa-futbol w-5 text-center mr-2 text-gold-600"></i>Ekstrakurikuler</a>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Menu lain --}}
                 <a href="{{ route('ppdb') }}"
                     class="relative text-gray-600 hover:text-primary-900 font-medium text-sm py-2 transition-all duration-300  hover:-translate-y-0.5 {{ request()->routeIs('ppdb') ? 'text-primary-900 font-semibold' : '' }}">
@@ -143,12 +165,20 @@
                     <span
                         class="absolute left-0 -bottom-0.5 h-0.5 bg-gold-500 transition-all duration-300 {{ request()->routeIs('ppdb') ? 'w-full' : 'w-0' }}"></span>
                 </a>
-                <a href="{{ route('pengumuman') }}"
-                    class="relative text-gray-600 hover:text-primary-900 font-medium text-sm py-2 transition-all duration-300  hover:-translate-y-0.5 {{ request()->routeIs('pengumuman') ? 'text-primary-900 font-semibold' : '' }}">
-                    Pengumuman
-                    <span
-                        class="absolute left-0 -bottom-0.5 h-0.5 bg-gold-500 transition-all duration-300 {{ request()->routeIs('pengumuman') ? 'w-full' : 'w-0' }}"></span>
-                </a>
+                {{-- Informasi Dropdown --}}
+                <div class="relative" id="informasi-dropdown-wrap">
+                    <button type="button" id="informasi-btn"
+                        class="relative flex items-center text-gray-600 hover:text-primary-900 font-medium text-sm py-2 transition-all duration-300 hover:-translate-y-0.5 {{ $isInformasiActive ? 'text-primary-900 font-semibold' : '' }}">
+                        Informasi
+                        <i id="informasi-chevron" class="fas fa-chevron-down text-[10px] ml-1 mt-0.5 transition-transform duration-300"></i>
+                        <span class="absolute left-0 -bottom-0.5 h-0.5 bg-gold-500 transition-all duration-300 {{ $isInformasiActive ? 'w-full' : 'w-0' }}"></span>
+                    </button>
+                    <div id="informasi-dropdown" class="absolute left-0 top-full mt-2 w-60 rounded-xl bg-white shadow-xl ring-1 ring-black/5 border-t-4 border-gold-500 z-50 overflow-hidden opacity-0 invisible translate-y-2 scale-95 transition-all duration-300 ease-out">
+                        <div class="py-2">
+                            <a href="{{ route('pengumuman') }}" class="flex items-center px-4 py-3 text-sm font-medium {{ request()->routeIs('pengumuman*', 'berita') ? 'text-primary-900 bg-primary-50 font-semibold border-l-4 border-gold-500' : 'text-slate-700 hover:bg-blue-50 hover:text-primary-900' }}"><i class="fas fa-bullhorn w-5 text-center mr-2 text-gold-600"></i>Pengumuman</a>
+                        </div>
+                    </div>
+                </div>
                 <a href="{{ route('galeri') }}"
                     class="relative text-gray-600 hover:text-primary-900 font-medium text-sm py-2 transition-all duration-300  hover:-translate-y-0.5 {{ request()->routeIs('galeri') ? 'text-primary-900 font-semibold' : '' }}">
                     Galeri
@@ -275,15 +305,36 @@
                 </div>
             </div>
 
+            {{-- Program Accordion --}}
+            <div>
+                <button type="button" id="program-accordion-btn"
+                    class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-300 {{ $isProgramActive ? 'text-primary-900 bg-primary-50 font-semibold' : 'text-slate-700 hover:bg-blue-50 hover:text-primary-900' }}">
+                    <span class="flex items-center"><i class="fas fa-lightbulb w-6 text-center mr-2 text-gold-600"></i> Program</span>
+                    <i id="program-accordion-chevron" class="fas fa-chevron-down text-[10px] transition-transform duration-300"></i>
+                </button>
+                <div id="program-accordion-menu" class="mt-1 ml-3 border-l-2 border-gold-500 bg-slate-100 rounded-r-lg overflow-hidden" style="display:none;">
+                    <a href="{{ route('program.unggulan') }}" class="mobile-link block pl-4 pr-3 py-2.5 text-sm font-medium {{ request()->routeIs('program.unggulan') ? 'text-primary-900 bg-primary-100 font-semibold' : 'text-slate-700 hover:bg-blue-100 hover:text-primary-900' }}">Program Unggulan</a>
+                    <a href="{{ route('program.nilai') }}" class="mobile-link block pl-4 pr-3 py-2.5 text-sm font-medium {{ request()->routeIs('program.nilai') ? 'text-primary-900 bg-primary-100 font-semibold' : 'text-slate-700 hover:bg-blue-100 hover:text-primary-900' }}">Nilai-Nilai Sekolah</a>
+                    @if ($hasEkstrakurikulerRoute)<a href="{{ route('ekstrakurikuler') }}" class="mobile-link block pl-4 pr-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-blue-100 hover:text-primary-900">Ekstrakurikuler</a>@endif
+                </div>
+            </div>
+
             {{-- Menu lain --}}
             <a href="{{ route('ppdb') }}"
                 class="mobile-link flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-300 {{ request()->routeIs('ppdb') ? 'text-primary-900 bg-primary-50 font-semibold' : 'text-slate-700 hover:bg-blue-50 hover:text-primary-900' }}">
                 <i class="fas fa-user-graduate w-6 text-center mr-2 text-gold-600"></i> PPDB
             </a>
-            <a href="{{ route('pengumuman') }}"
-                class="mobile-link flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-300 {{ request()->routeIs('pengumuman') ? 'text-primary-900 bg-primary-50 font-semibold' : 'text-slate-700 hover:bg-blue-50 hover:text-primary-900' }}">
-                <i class="fas fa-bullhorn w-6 text-center mr-2 text-gold-600"></i> Pengumuman
-            </a>
+            {{-- Informasi Accordion --}}
+            <div>
+                <button type="button" id="informasi-accordion-btn"
+                    class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-300 {{ $isInformasiActive ? 'text-primary-900 bg-primary-50 font-semibold' : 'text-slate-700 hover:bg-blue-50 hover:text-primary-900' }}">
+                    <span class="flex items-center"><i class="fas fa-circle-info w-6 text-center mr-2 text-gold-600"></i> Informasi</span>
+                    <i id="informasi-accordion-chevron" class="fas fa-chevron-down text-[10px] transition-transform duration-300"></i>
+                </button>
+                <div id="informasi-accordion-menu" class="mt-1 ml-3 border-l-2 border-gold-500 bg-slate-100 rounded-r-lg overflow-hidden" style="display:none;">
+                    <a href="{{ route('pengumuman') }}" class="mobile-link block pl-4 pr-3 py-2.5 text-sm font-medium {{ request()->routeIs('pengumuman*', 'berita') ? 'text-primary-900 bg-primary-100 font-semibold' : 'text-slate-700 hover:bg-blue-100 hover:text-primary-900' }}">Pengumuman</a>
+                </div>
+            </div>
             <a href="{{ route('galeri') }}"
                 class="mobile-link flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-300 {{ request()->routeIs('galeri') ? 'text-primary-900 bg-primary-50 font-semibold' : 'text-slate-700 hover:bg-blue-50 hover:text-primary-900' }}">
                 <i class="fas fa-images w-6 text-center mr-2 text-gold-600"></i> Galeri
@@ -350,6 +401,12 @@
         const accordionBtn = $('profil-accordion-btn');
         const accordionMenu = $('profil-accordion-menu');
         const accordionChevron = $('profil-accordion-chevron');
+        const programAccordionBtn = $('program-accordion-btn');
+        const programAccordionMenu = $('program-accordion-menu');
+        const programAccordionChevron = $('program-accordion-chevron');
+        const informasiAccordionBtn = $('informasi-accordion-btn');
+        const informasiAccordionMenu = $('informasi-accordion-menu');
+        const informasiAccordionChevron = $('informasi-accordion-chevron');
 
         function setMobileMenu(open) {
             if (!mobileMenu) return;
@@ -406,6 +463,22 @@
             });
         }
 
+        if (programAccordionBtn) {
+            programAccordionBtn.addEventListener('click', function() {
+                const open = programAccordionMenu.style.display === 'none';
+                programAccordionMenu.style.display = open ? 'block' : 'none';
+                programAccordionChevron.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+            });
+        }
+
+        if (informasiAccordionBtn) {
+            informasiAccordionBtn.addEventListener('click', function() {
+                const open = informasiAccordionMenu.style.display === 'none';
+                informasiAccordionMenu.style.display = open ? 'block' : 'none';
+                informasiAccordionChevron.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+            });
+        }
+
         // Tutup mobile menu saat link diklik
         document.querySelectorAll('.mobile-link').forEach(function(link) {
             link.addEventListener('click', function() {
@@ -418,8 +491,18 @@
         const profilBtn = $('profil-btn');
         const profilDropdown = $('profil-dropdown');
         const profilChevron = $('profil-chevron');
+        const programWrap = $('program-dropdown-wrap');
+        const programBtn = $('program-btn');
+        const programDropdown = $('program-dropdown');
+        const programChevron = $('program-chevron');
+        const informasiWrap = $('informasi-dropdown-wrap');
+        const informasiBtn = $('informasi-btn');
+        const informasiDropdown = $('informasi-dropdown');
+        const informasiChevron = $('informasi-chevron');
 
         let desktopOpen = false;
+        let programOpen = false;
+        let informasiOpen = false;
 
         function setProfilDropdown(open) {
             if (!profilDropdown) return;
@@ -431,6 +514,26 @@
                 profilDropdown.classList.add('opacity-0', 'invisible', 'translate-y-2', 'scale-95');
                 profilChevron.style.transform = 'rotate(0deg)';
             }
+        }
+
+        function setProgramDropdown(open) {
+            if (!programDropdown) return;
+            programOpen = open;
+            programDropdown.classList.toggle('opacity-0', !open);
+            programDropdown.classList.toggle('invisible', !open);
+            programDropdown.classList.toggle('translate-y-2', !open);
+            programDropdown.classList.toggle('scale-95', !open);
+            if (programChevron) programChevron.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        function setInformasiDropdown(open) {
+            if (!informasiDropdown) return;
+            informasiOpen = open;
+            informasiDropdown.classList.toggle('opacity-0', !open);
+            informasiDropdown.classList.toggle('invisible', !open);
+            informasiDropdown.classList.toggle('translate-y-2', !open);
+            informasiDropdown.classList.toggle('scale-95', !open);
+            if (informasiChevron) informasiChevron.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
         }
 
         function isDesktop() {
@@ -462,6 +565,26 @@
             });
         }
 
+        if (programWrap && programBtn && programDropdown) {
+            programWrap.addEventListener('mouseenter', function() { if (window.innerWidth >= 1280) setProgramDropdown(true); });
+            programWrap.addEventListener('mouseleave', function() { if (window.innerWidth >= 1280) setProgramDropdown(false); });
+            programBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (window.innerWidth < 1280) setProgramDropdown(!programOpen);
+            });
+            document.addEventListener('click', function(e) { if (!programWrap.contains(e.target)) setProgramDropdown(false); });
+        }
+
+        if (informasiWrap && informasiBtn && informasiDropdown) {
+            informasiWrap.addEventListener('mouseenter', function() { if (window.innerWidth >= 1280) setInformasiDropdown(true); });
+            informasiWrap.addEventListener('mouseleave', function() { if (window.innerWidth >= 1280) setInformasiDropdown(false); });
+            informasiBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (window.innerWidth < 1280) setInformasiDropdown(!informasiOpen);
+            });
+            document.addEventListener('click', function(e) { if (!informasiWrap.contains(e.target)) setInformasiDropdown(false); });
+        }
+
         // Tutup dropdown/mobile saat resize ke desktop
         window.addEventListener('resize', function() {
             if (isDesktop()) {
@@ -469,6 +592,8 @@
             }
             if (window.innerWidth >= 1280) {
                 setProfilDropdown(false);
+                setProgramDropdown(false);
+                setInformasiDropdown(false);
             }
         });
     })();

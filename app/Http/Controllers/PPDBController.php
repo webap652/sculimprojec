@@ -144,9 +144,47 @@ class PPDBController extends Controller
     {
         $data = [
             'ppdb_online' => Setting::get('ppdb.online_url', '#'),
+            'ppdb_open' => Setting::ppdbIsOpen(),
+            'ppdb_academic_year' => Setting::ppdbAcademicYear(),
+            'ppdb_close_message' => Setting::ppdbCloseMessage(),
         ];
 
         return view('ppdb.index', compact('data'));
+    }
+
+    public function programUnggulan()
+    {
+        $programs = [
+            ['name' => 'Pirime Literasi Pagi', 'icon' => 'book-open', 'desc' => '15 menit membaca Alkitab dan buku non-pelajaran setiap pagi sebelum KBM untuk melatih kemampuan membaca, membangun karakter, dan memperkuat kehidupan rohani peserta didik.'],
+            ['name' => 'Taman Belajar Kebun Sekolah', 'icon' => 'leaf', 'desc' => 'Mengajak siswa menanam dan merawat sayuran, kangkung, ubi, dan tanaman lokal sebagai media pembelajaran IPA sekaligus melatih kepedulian lingkungan dan kewirausahaan sederhana. Hasil kebun dapat dimanfaatkan untuk konsumsi atau dijual.'],
+            ['name' => 'SMPN 1 Pirime Berbahasa', 'icon' => 'language', 'desc' => 'Membiasakan penggunaan Bahasa Indonesia yang baik dan benar dalam lingkungan sekolah serta mengenalkan penggunaan bahasa Lani satu hari dalam setiap minggu sebagai upaya menjaga budaya, bahasa, dan identitas lokal tanpa meninggalkan semangat nasional.'],
+            ['name' => 'Sanggar Noken & Tifa', 'icon' => 'music', 'desc' => 'Program seni dan budaya yang mengembangkan keterampilan siswa melalui kegiatan menganyam noken, tarian daerah, dan memainkan tifa agar budaya Lanny Jaya tetap hidup, dikenal, dan diwariskan kepada generasi berikutnya.'],
+            ['name' => 'Pramuka & Bela Negara Pegunungan', 'icon' => 'tent', 'desc' => 'Membentuk peserta didik yang kuat secara fisik dan mental melalui kegiatan Pramuka, latihan PBB, kedisiplinan, kemandirian, keterampilan dasar bertahan di lingkungan pegunungan, serta menumbuhkan rasa cinta tanah air.'],
+            ['name' => 'Digital Corner 3T', 'icon' => 'laptop', 'desc' => 'Memanfaatkan laptop sekolah dan perangkat yang tersedia, termasuk HP guru, untuk mengenalkan TIK dasar, mengetik, penggunaan Canva, dan keterampilan digital lainnya meskipun berada dalam kondisi keterbatasan jaringan internet.'],
+        ];
+
+        return view('program.unggulan', compact('programs'));
+    }
+
+    public function nilaiSekolah()
+    {
+        $values = [
+            ['name' => 'Iman', 'icon' => 'heart', 'desc' => 'Menjadikan iman sebagai dasar dalam belajar, bersikap, dan melayani sesama.'],
+            ['name' => 'Integritas', 'icon' => 'shield-halved', 'desc' => 'Jujur, bertanggung jawab, dan konsisten antara perkataan serta perbuatan.'],
+            ['name' => 'Disiplin', 'icon' => 'clock', 'desc' => 'Menghargai waktu, aturan, dan komitmen dalam kehidupan sekolah.'],
+            ['name' => 'Mandiri', 'icon' => 'person-walking', 'desc' => 'Berani mengambil tanggung jawab dan menyelesaikan tugas dengan usaha sendiri.'],
+            ['name' => 'Gotong Royong', 'icon' => 'people-group', 'desc' => 'Bekerja sama dan saling membantu untuk mencapai tujuan bersama.'],
+            ['name' => 'Cinta Budaya', 'icon' => 'masks-theater', 'desc' => 'Mengenal, menghargai, dan melestarikan budaya Lanny Jaya.'],
+            ['name' => 'Peduli Lingkungan', 'icon' => 'leaf', 'desc' => 'Menjaga kebersihan, kesehatan, dan kelestarian lingkungan sekolah.'],
+            ['name' => 'Kreatif', 'icon' => 'lightbulb', 'desc' => 'Mengembangkan gagasan dan karya baru untuk menjawab tantangan.'],
+            ['name' => 'Tangguh', 'icon' => 'mountain-sun', 'desc' => 'Pantang menyerah dan mampu bertumbuh dalam kondisi yang beragam.'],
+            ['name' => 'Berprestasi', 'icon' => 'trophy', 'desc' => 'Berusaha memberikan hasil terbaik sesuai potensi dan kemampuan.'],
+            ['name' => 'Saling Menghormati', 'icon' => 'handshake', 'desc' => 'Menghargai perbedaan, martabat, dan pendapat setiap warga sekolah.'],
+            ['name' => 'Peduli Sesama', 'icon' => 'hands-holding-heart', 'desc' => 'Peka, empati, dan hadir membantu orang lain dengan tulus.'],
+            ['name' => 'Cinta Tanah Air', 'icon' => 'flag', 'desc' => 'Menumbuhkan rasa bangga, tanggung jawab, dan pengabdian kepada Indonesia.'],
+        ];
+
+        return view('program.nilai', compact('values'));
     }
 
     public function pengumuman()

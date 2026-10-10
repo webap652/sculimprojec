@@ -9,7 +9,7 @@
     {{-- Background Image Full Coverage --}}
     <div class="absolute inset-0 z-0">
         <img class="h-full w-full object-cover object-center" src="{{ $bg }}"
-            onerror="this.src='https://img.freepik.com/premium-vector/indonesian-elementary-school-building-with-beautiful-nature-landscape-back-education-concept_288411-1679.jpg?w=2000'"
+            onerror="this.onerror=null;this.src='{{ asset('images/hero-bg/hero bg (2).png') }}'"
             alt="Hero">
         {{-- Navy Gradient Overlay untuk kontras premium --}}
         <div

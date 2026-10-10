@@ -1,19 +1,6 @@
 @extends('layouts.app')
 
 @php
-    // Dummy data for demonstration if $pengumuman is not passed.
-    // In a real scenario, this will be passed from the controller.
-    $pengumuman =
-        $pengumuman ??
-        (object) [
-            'judul' => 'Contoh Judul Pengumuman yang Cukup Panjang dan Informatif',
-            'isi' =>
-                '<h1>Heading 1</h1><p>Ini adalah paragraf pembuka untuk isi pengumuman. Dibuat dengan <strong>teks tebal</strong> dan juga <em>teks miring</em> untuk menyorot informasi penting. Konten ini akan diformat secara otomatis menggunakan kelas `prose` dari Tailwind CSS untuk memastikan keterbacaan yang maksimal.</p><h2>Heading 2</h2><p>Kelas `prose` juga menangani berbagai elemen HTML lainnya dengan sangat baik, seperti daftar:</p><ul><li>Item daftar pertama yang menjelaskan poin penting.</li><li>Item daftar kedua dengan detail tambahan.</li><li>Item daftar ketiga sebagai penutup.</li></ul><blockquote>Ini adalah contoh blockquote yang bisa digunakan untuk mengutip pernyataan penting dari kepala sekolah atau sumber lainnya.</blockquote><p>Paragraf penutup yang memberikan kesimpulan atau langkah selanjutnya bagi pembaca. Terima kasih telah membaca pengumuman ini.</p>',
-            'gambar' => 'images/hero-bg/hero bg (2).png', // Example image path
-            'tanggal_publish' => now(),
-            'created_at' => now(),
-            'jenis' => 'Sekolah',
-        ];
     $breadcrumb = ['Beranda', 'Pengumuman', Str::limit($pengumuman->judul, 25)];
 @endphp
 
@@ -42,7 +29,7 @@
                         <li>
                             <div class="flex items-center">
                                 <i class="fas fa-chevron-right text-emerald-300 text-xs mx-1"></i>
-                                <a href="{{ route('pengumuman.index') }}"
+                                <a href="{{ route('pengumuman') }}"
                                     class="text-sm font-medium text-emerald-100 hover:text-white">Pengumuman</a>
                             </div>
                         </li>

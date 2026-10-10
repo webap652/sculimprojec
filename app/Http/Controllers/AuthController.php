@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Setting;
 
 class AuthController extends Controller
 {
@@ -39,11 +40,19 @@ class AuthController extends Controller
 
     public function showRegister()
     {
+        if (!Setting::ppdbIsOpen()) {
+            return redirect()->route('ppdb')->with('error', Setting::ppdbCloseMessage());
+        }
+
         return view('auth.register');
     }
 
     public function register(Request $request)
     {
+        if (!Setting::ppdbIsOpen()) {
+            return redirect()->route('ppdb')->with('error', 'Pendaftaran PPDB/SPMB saat ini telah ditutup.');
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',

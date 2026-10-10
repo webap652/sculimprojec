@@ -44,6 +44,13 @@ class UpdateSystemSettingsRequest extends FormRequest
 
             // Sistem
             'system.maintenance.enabled' => ['nullable', 'boolean'],
+
+            // PPDB/SPMB
+            'ppdb_open' => ['nullable', 'boolean'],
+            'ppdb_academic_year' => ['required', 'regex:/^\d{4}\/\d{4}$/'],
+            'ppdb_close_message' => ['required', 'string', 'max:1000'],
+            'ppdb_start_date' => ['nullable', 'date'],
+            'ppdb_end_date' => ['nullable', 'date', 'after_or_equal:ppdb_start_date'],
         ];
     }
 
@@ -58,6 +65,8 @@ class UpdateSystemSettingsRequest extends FormRequest
         if ($enabled === null) {
             $this->merge(['system.maintenance.enabled' => false]);
         }
+
+        $this->merge(['ppdb_open' => $this->boolean('ppdb_open')]);
     }
 }
 

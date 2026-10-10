@@ -177,34 +177,29 @@
                         </div>
                         <div class="p-6">
                             <div class="space-y-3">
-                                @if ($pendaftar->foto)
-                                    <a href="{{ asset('storage/' . $pendaftar->foto) }}" target="_blank"
-                                        class="flex items-center p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition duration-150 ease-in-out">
-                                        <i class="fas fa-image text-blue-500 mr-3"></i>
-                                        <span class="text-sm text-gray-700">Lihat Foto</span>
-                                    </a>
-                                @endif
-                                @if ($pendaftar->kk)
-                                    <a href="{{ asset('storage/' . $pendaftar->kk) }}" target="_blank"
-                                        class="flex items-center p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition duration-150 ease-in-out">
-                                        <i class="fas fa-file text-green-500 mr-3"></i>
-                                        <span class="text-sm text-gray-700">Lihat KK</span>
-                                    </a>
-                                @endif
-                                @if ($pendaftar->akte)
-                                    <a href="{{ asset('storage/' . $pendaftar->akte) }}" target="_blank"
-                                        class="flex items-center p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition duration-150 ease-in-out">
-                                        <i class="fas fa-file text-red-500 mr-3"></i>
-                                        <span class="text-sm text-gray-700">Lihat Akte</span>
-                                    </a>
-                                @endif
-                                @if ($pendaftar->ijazah)
-                                    <a href="{{ asset('storage/' . $pendaftar->ijazah) }}" target="_blank"
-                                        class="flex items-center p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition duration-150 ease-in-out">
-                                        <i class="fas fa-graduation-cap text-purple-500 mr-3"></i>
-                                        <span class="text-sm text-gray-700">Lihat Ijazah</span>
-                                    </a>
-                                @endif
+                                @php
+                                    $berkas = [
+                                        'foto' => ['label' => 'Pas Foto', 'icon' => 'fa-image'],
+                                        'kk' => ['label' => 'Kartu Keluarga', 'icon' => 'fa-file'],
+                                        'akte' => ['label' => 'Akta Kelahiran', 'icon' => 'fa-file'],
+                                        'ijazah' => ['label' => 'Ijazah', 'icon' => 'fa-graduation-cap'],
+                                    ];
+                                @endphp
+
+                                @foreach ($berkas as $field => $item)
+                                    @if ($pendaftar->$field)
+                                        <a href="{{ asset('storage/' . $pendaftar->$field) }}" target="_blank"
+                                            class="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-3 transition hover:bg-gray-50">
+                                            <div class="flex items-center">
+                                                <span class="mr-3 rounded-md bg-green-500 p-2 text-white">
+                                                    <i class="fas fa-check"></i>
+                                                </span>
+                                                <span class="text-sm text-gray-700">{{ $item['label'] }}</span>
+                                            </div>
+                                            <span class="text-sm font-semibold text-green-600">Lengkap</span>
+                                        </a>
+                                    @endif
+                                @endforeach
                                 @if (!$pendaftar->foto && !$pendaftar->kk && !$pendaftar->akte && !$pendaftar->ijazah)
                                     <p class="text-gray-500 text-sm text-center py-4">Belum ada berkas yang diupload</p>
                                 @endif

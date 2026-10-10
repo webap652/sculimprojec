@@ -38,7 +38,7 @@
         {{-- Background Image Full Coverage --}}
         <div class="absolute inset-0 z-0">
             <img class="h-full w-full object-cover object-center" src="{{ $heroBg }}"
-                onerror="this.src='https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop'"
+                onerror="this.onerror=null;this.src='{{ asset('images/hero-bg/hero bg (2).png') }}'"
                 alt="{{ $schoolName ?? 'SMP Negeri 1 Pirime' }}">
             {{-- Navy premium overlay --}}
             <div
@@ -206,7 +206,7 @@
                         @forelse($galeris as $g)
                             <div class="rounded-xl overflow-hidden aspect-[4/3] relative group">
                                 <img src="{{ asset('storage/' . $g->gambar) }}"
-                                    onerror="this.src='https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=300'"
+                                    onerror="this.onerror=null;this.src='{{ asset('images/hero-bg/hero bg (2).png') }}'"
                                     class="w-full h-full object-cover transition duration-500 group-hover:scale-110"
                                     loading="lazy" alt="{{ $g->judul }}">
                             </div>
@@ -223,7 +223,8 @@
                 <div
                     class="bg-gradient-to-br from-primary-600 to-primary-800 rounded-2xl shadow-lg relative overflow-hidden flex flex-col h-full min-h-[300px] hover-lift">
                     <div
-                        class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800')] opacity-20 mix-blend-overlay bg-cover bg-center">
+                        class="absolute inset-0 bg-cover bg-center opacity-20 mix-blend-overlay"
+                        style="background-image: url('{{ $heroBg }}')">
                     </div>
                     <div class="relative z-10 p-8 flex flex-col h-full text-white justify-between">
                         <div>

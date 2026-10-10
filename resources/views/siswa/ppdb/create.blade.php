@@ -17,7 +17,7 @@
                 </div>
                 <div>
                     <h1 class="text-2xl font-extrabold text-white">Formulir PPDB</h1>
-                    <p class="text-indigo-100 text-sm">Lengkapi data pendaftaran SMP YPK Kotaraja</p>
+                    <p class="text-indigo-100 text-sm">Lengkapi data pendaftaran SMP NEGERI 1 PIRIME</p>
                 </div>
             </div>
         </div>
@@ -416,13 +416,6 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Foto Profil</label>
                         <input type="file" name="foto_profil" accept="image/*"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <p class="text-sm text-gray-500 mt-1">Format: JPG, PNG, Max: 2MB</p>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Foto Formal</label>
-                        <input type="file" name="foto" accept="image/*"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <p class="text-sm text-gray-500 mt-1">Format: JPG, PNG, Max: 2MB</p>
                     </div>

@@ -455,6 +455,26 @@
                     </section>
 
                     {{-- ============================================================ --}}
+                    {{-- PENGATURAN PPDB / SPMB --}}
+                    {{-- ============================================================ --}}
+                    <section class="space-y-4 rounded-2xl border border-[#D4AF37]/40 bg-[#FFFCF2] p-5 sm:p-6">
+                        <div class="flex items-center gap-3 border-b border-[#D4AF37]/30 pb-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0A2540] text-[#D4AF37]"><i class="fas fa-graduation-cap text-lg"></i></div>
+                            <div><h2 class="text-lg font-bold text-slate-800">Pengaturan PPDB / SPMB</h2><p class="text-xs text-slate-500">Kontrol pembukaan pendaftaran dan jadwal tahun ajaran.</p></div>
+                        </div>
+                        <div class="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4">
+                            <div><p class="font-bold text-slate-800">Pendaftaran Online</p><p class="text-sm text-slate-600">{{ \App\Models\Setting::ppdbIsOpen() ? 'Pendaftaran sedang dibuka.' : 'Pendaftaran sedang ditutup.' }}</p></div>
+                            <label class="relative inline-flex cursor-pointer items-center"><input type="checkbox" name="ppdb_open" value="1" class="peer sr-only" @checked(old('ppdb_open', (bool) ($settings['ppdb_open'] ?? true)))><span class="h-7 w-12 rounded-full bg-rose-200 transition peer-checked:bg-emerald-500"></span><span class="absolute left-1 h-5 w-5 rounded-full bg-white shadow transition peer-checked:translate-x-5"></span><span class="sr-only">Aktifkan PPDB</span></label>
+                        </div>
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                            <div><label class="text-sm font-semibold text-slate-700">Tahun Ajaran</label><input type="text" name="ppdb_academic_year" value="{{ old('ppdb_academic_year', $settings['ppdb_academic_year'] ?? '2026/2027') }}" placeholder="2026/2027" pattern="\d{4}/\d{4}" required class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm"></div>
+                            <div><label class="text-sm font-semibold text-slate-700">Tanggal Mulai</label><input type="date" name="ppdb_start_date" value="{{ old('ppdb_start_date', $settings['ppdb_start_date'] ?? '') }}" class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm"></div>
+                            <div><label class="text-sm font-semibold text-slate-700">Tanggal Tutup</label><input type="date" name="ppdb_end_date" value="{{ old('ppdb_end_date', $settings['ppdb_end_date'] ?? '') }}" class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm"></div>
+                        </div>
+                        <div><label class="text-sm font-semibold text-slate-700">Pesan Pendaftaran Ditutup</label><textarea name="ppdb_close_message" rows="3" required class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm">{{ old('ppdb_close_message', $settings['ppdb_close_message'] ?? 'Pendaftaran PPDB/SPMB Tahun Ajaran 2026/2027 saat ini telah ditutup. Mohon menunggu informasi pendaftaran berikutnya.') }}</textarea></div>
+                    </section>
+
+                    {{-- ============================================================ --}}
                     {{-- SISTEM --}}
                     {{-- ============================================================ --}}
                     <section class="space-y-4">

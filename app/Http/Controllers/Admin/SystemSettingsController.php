@@ -56,6 +56,11 @@ class SystemSettingsController extends Controller
             'school.statistics.jumlah_rombel',
             'school.values',
             'system.maintenance.enabled',
+            'ppdb_open',
+            'ppdb_academic_year',
+            'ppdb_close_message',
+            'ppdb_start_date',
+            'ppdb_end_date',
         ];
 
         $settings = [];
@@ -117,6 +122,11 @@ class SystemSettingsController extends Controller
 
         // Boolean maintenance
         Setting::set('system.maintenance.enabled', (bool) $request->boolean('system.maintenance.enabled'));
+        Setting::set('ppdb_open', (bool) $request->boolean('ppdb_open'));
+        Setting::set('ppdb_academic_year', $request->input('ppdb_academic_year'));
+        Setting::set('ppdb_close_message', $request->input('ppdb_close_message'));
+        Setting::set('ppdb_start_date', $request->input('ppdb_start_date') ?: null);
+        Setting::set('ppdb_end_date', $request->input('ppdb_end_date') ?: null);
 
         // Uploads
         $uploads = [
@@ -135,6 +145,6 @@ class SystemSettingsController extends Controller
             }
         }
 
-        return redirect()->route('admin.system-settings.edit')->with('success', 'System Settings berhasil diperbarui.');
+        return redirect()->route('admin.system-settings.edit')->with('success', 'Pengaturan PPDB/SPMB berhasil diperbarui.');
     }
 }

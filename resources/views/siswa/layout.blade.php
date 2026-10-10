@@ -5,7 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Dashboard Siswa') | PPDB SMP YPK Kotaraja</title>
+    @php
+        use App\Models\Setting;
+        $schoolName = Setting::get('school.identity.name', 'SMP NEGERI 1 PIRIME');
+    @endphp
+    <title>@yield('title', 'Dashboard Siswa') | PPDB {{ $schoolName }}</title>
 
     {{-- Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -103,11 +107,13 @@
     @stack('head')
 </head>
 
-@php
+    @php
     use Illuminate\Support\Facades\Route;
+        use App\Models\Setting;
     $current = Route::currentRouteName();
     $user = auth()->user();
     $pendaftarGlobal = $pendaftar ?? ($user ? $user->pendaftar : null);
+        $ppdbAcademicYear = Setting::ppdbAcademicYear();
 @endphp
 
 <body class="font-sans antialiased bg-slate-100 text-slate-800">
@@ -124,7 +130,7 @@
                 </div>
                 <div>
                     <div class="font-extrabold text-white text-sm leading-tight">Siswa Panel</div>
-                    <div class="text-[11px] text-slate-400">PPDB SMP YPK Kotaraja</div>
+                    <div class="text-[11px] text-slate-400">PPDB {{ $schoolName }} · {{ $ppdbAcademicYear }}</div>
                 </div>
             </div>
 
@@ -186,7 +192,7 @@
 
                 <a href="{{ route('home') }}" target="_blank"
                     class="flex items-center px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-800 transition-colors">
-                    <i class="fas fa-globe w-5 mr-2 text-center"></i> Lihat Website
+                    <i class="fas fa-external-link-alt w-5 mr-2 text-center"></i> Lihat Website
                 </a>
             </nav>
 
@@ -250,7 +256,7 @@
                         </div>
                         <div>
                             <div class="font-extrabold text-white text-sm leading-tight">Siswa Panel</div>
-                            <div class="text-[11px] text-slate-400">PPDB SMP YPK Kotaraja</div>
+                            <div class="text-[11px] text-slate-400">PPDB {{ $schoolName }} · {{ $ppdbAcademicYear }}</div>
                         </div>
                     </div>
                     <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white p-1">
@@ -297,7 +303,7 @@
                     <div class="pt-3 pb-1 px-3 text-[11px] text-slate-500 uppercase font-bold">Lainnya</div>
                     <a href="{{ route('home') }}" target="_blank"
                         class="flex items-center px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-800"><i
-                            class="fas fa-globe w-5 mr-2 text-center"></i> Lihat Website</a>
+                            class="fas fa-external-link-alt w-5 mr-2 text-center"></i> Lihat Website</a>
                 </nav>
                 <div class="px-3 py-4 border-t border-slate-800">
                     <a href="{{ route('logout') }}"
@@ -315,7 +321,7 @@
             </main>
 
             <footer class="px-6 py-5 text-center text-xs text-slate-400 border-t border-slate-200">
-                &copy; {{ date('Y') }} SMP YPK Kotaraja — PPDB Online. All rights reserved.
+                &copy; {{ date('Y') }} {{ $schoolName }} · PPDB {{ $ppdbAcademicYear }}. All rights reserved.
             </footer>
         </div>
     </div>

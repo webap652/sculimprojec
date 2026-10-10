@@ -54,6 +54,10 @@ Route::middleware('maintenance')->group(function () {
 
     // PPDB
     Route::get('/ppdb', [PPDBController::class, 'ppdb'])->name('ppdb');
+
+    // Program sekolah
+    Route::get('/program/unggulan', [PPDBController::class, 'programUnggulan'])->name('program.unggulan');
+    Route::get('/program/nilai-sekolah', [PPDBController::class, 'nilaiSekolah'])->name('program.nilai');
 });
 
 
@@ -230,6 +234,14 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // Menu lain (opsional)
     Route::get('/admin/laporan', [AdminController::class, 'laporan'])
         ->name('admin.laporan');
+    Route::get('/admin/ppdb/laporan', [AdminController::class, 'laporan'])
+        ->name('admin.ppdb.laporan');
+    Route::get('/admin/laporan/cetak', [AdminController::class, 'cetakLaporan'])
+        ->name('admin.laporan.cetak');
+    Route::get('/admin/laporan/export', [AdminController::class, 'exportLaporan'])
+        ->name('admin.laporan.export');
+    Route::get('/admin/laporan/bukti/{id}', [AdminController::class, 'cetakBuktiPendaftar'])
+        ->name('admin.laporan.bukti');
 
     // Pengumuman Management
     Route::get('/admin/pengumuman', [AdminController::class, 'pengumuman'])

@@ -7,7 +7,7 @@
     $email = Setting::get('school.contact.email', 'info@smpn1pirime.sch.id');
     $logo = Setting::get('school.assets.logo', 'images/logo sekolah.png');
     $logoUrl = Setting::getAssetUrl('school.assets.logo', 'images/logo sekolah.png');
-    $pageTitle = trim(View::getSections()['title'] ?? $schoolName);
+    $pageTitle = trim(View::getSections()['title'] ?? 'SMP Negeri 1 Pirime | Cerdas, Mandiri, Berkarakter');
     $pageDesc = trim(
         View::getSections()['description'] ??
             'Website resmi SMP Negeri 1 Pirime - Mewujudkan peserta didik yang Beriman, Berilmu, Berkarakter, dan Peduli Lingkungan menuju Generasi Emas Lanny Jaya.',
@@ -32,7 +32,7 @@
 
     {{-- Open Graph --}}
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="{{ $schoolName }}">
+    <meta property="og:site_name" content="SMP Negeri 1 Pirime">
     <meta property="og:title" content="{{ $pageTitle }}">
     <meta property="og:description" content="{{ $pageDesc }}">
     <meta property="og:url" content="{{ $currentUrl }}">
@@ -44,11 +44,12 @@
     <meta name="twitter:title" content="{{ $pageTitle }}">
     <meta name="twitter:description" content="{{ $pageDesc }}">
     <meta name="twitter:image" content="{{ $logoUrl }}">
+    <meta name="twitter:site" content="@smpn1pirime">
 
     {{-- Favicon --}}
     @php $favicon = Setting::get('school.assets.favicon'); @endphp
     @if ($favicon)
-        <link rel="icon" href="{{ asset('storage/' . $favicon) }}" type="image/x-icon">
+        <link rel="icon" href="{{ str_starts_with($favicon, 'images/') ? asset($favicon) : asset('storage/' . ltrim($favicon, '/')) }}" type="image/png">
     @else
         <link rel="icon" href="{{ $logoUrl }}" type="image/png">
     @endif
@@ -244,7 +245,9 @@
 </head>
 
 <body class="font-sans antialiased bg-slate-50 text-slate-800">
-    @include('layouts.partials.public-navbar')
+    @if (!request()->routeIs('siswa.pendaftaran') && !View::hasSection('hidePublicNavigation'))
+        @include('layouts.partials.public-navbar')
+    @endif
 
     @yield('hero')
 

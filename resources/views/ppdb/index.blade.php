@@ -17,6 +17,9 @@
   @endsection
 
   @section('content')
+      @if (session('error'))
+          <div class="mx-auto mt-6 max-w-3xl rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-center text-sm font-medium text-rose-700">{{ session('error') }}</div>
+      @endif
       <style>
           .ppdb-card {
               transition: transform 0.3s;
@@ -72,7 +75,8 @@
                   </div>
                   <h2 class="text-3xl md:text-4xl font-extrabold text-primary-900">PPDB Online</h2>
                   <div class="w-20 h-1.5 bg-gradient-to-r from-primary-500 to-gold-500 mx-auto rounded-full mt-4"></div>
-                  <p class="mt-4 text-slate-500 text-lg">Daftar secara online melalui sistem CBT</p>
+                  <p class="mt-4 text-slate-500 text-lg">Tahun Ajaran {{ $data['ppdb_academic_year'] }}</p>
+                  <div class="mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold {{ $data['ppdb_open'] ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700' }}"><i class="fas {{ $data['ppdb_open'] ? 'fa-circle-check' : 'fa-lock' }}"></i>{{ $data['ppdb_open'] ? 'PENDAFTARAN DIBUKA' : 'PENDAFTARAN DITUTUP' }}</div>
               </div>
 
               {{-- Stepper --}}
@@ -131,10 +135,11 @@
                           <h4 class="text-2xl font-bold text-primary-900 mb-3">Sistem PPDB Online</h4>
                           <p class="text-slate-600 mb-8">Lakukan pendaftaran secara online melalui Computer Based Test
                               (CBT) untuk kemudahan dan efisiensi.</p>
-                          <a href="{{ $data['ppdb_online'] ?? '#' }}" target="_blank"
-                              class="inline-flex items-center justify-center bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-primary-900 px-8 py-4 rounded-full font-bold transition-all shadow-lg shadow-gold-500/30 hover:-translate-y-1">
-                              <i class="fas fa-external-link-alt mr-2"></i> Daftar Online
-                          </a>
+                          @if ($data['ppdb_open'])
+                              <a href="{{ route('register.form') }}" class="inline-flex items-center justify-center bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-primary-900 px-8 py-4 rounded-full font-bold transition-all shadow-lg shadow-gold-500/30 hover:-translate-y-1"><i class="fas fa-user-plus mr-2"></i> Daftar Sekarang</a>
+                          @else
+                              <div class="mx-auto max-w-xl rounded-2xl border border-rose-200 bg-rose-50 p-5 text-left text-rose-800"><div class="flex items-start gap-3"><i class="fas fa-lock mt-1"></i><div><p class="font-bold">Pendaftaran Sedang Ditutup</p><p class="mt-1 text-sm">{{ $data['ppdb_close_message'] }}</p></div></div></div>
+                          @endif
                       </div>
                   </div>
               </div>
@@ -252,7 +257,7 @@
                           {{-- Jadwal --}}
                           <div class="mt-12">
                               <h3 class="text-2xl font-extrabold text-primary-900 mb-3">Jadwal PPDB</h3>
-                              <p class="text-slate-500">Timeline penting PPDB {{ date('Y') }}/{{ date('Y') + 1 }}</p>
+                              <p class="text-slate-500">Timeline penting PPDB {{ $data['ppdb_academic_year'] }}</p>
 
                               <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
                                   <div
@@ -260,28 +265,28 @@
                                       <i
                                           class="fas fa-calendar-plus text-primary-700 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
                                       <h4 class="font-bold text-primary-900">Pendaftaran Online</h4>
-                                      <p class="text-slate-500">1 - 15 Juni {{ date('Y') }}</p>
+                                      <p class="text-slate-500">Tahun Ajaran {{ $data['ppdb_academic_year'] }}</p>
                                   </div>
                                   <div
                                       class="bg-[#F8FAFC] rounded-2xl p-6 border border-slate-100 hover:shadow-lg transition-all group">
                                       <i
                                           class="fas fa-bullhorn text-gold-500 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
                                       <h4 class="font-bold text-primary-900">Pengumuman Hasil</h4>
-                                      <p class="text-slate-500">20 Juni {{ date('Y') }}</p>
+                                      <p class="text-slate-500">Tahun Ajaran {{ $data['ppdb_academic_year'] }}</p>
                                   </div>
                                   <div
                                       class="bg-[#F8FAFC] rounded-2xl p-6 border border-slate-100 hover:shadow-lg transition-all group">
                                       <i
                                           class="fas fa-user-check text-gold-500 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
                                       <h4 class="font-bold text-primary-900">Daftar Ulang</h4>
-                                      <p class="text-slate-500">21 - 25 Juni {{ date('Y') }}</p>
+                                      <p class="text-slate-500">Tahun Ajaran {{ $data['ppdb_academic_year'] }}</p>
                                   </div>
                                   <div
                                       class="bg-[#F8FAFC] rounded-2xl p-6 border border-slate-100 hover:shadow-lg transition-all group">
                                       <i
                                           class="fas fa-school text-primary-700 text-3xl mb-3 group-hover:scale-110 transition-transform"></i>
 
-                                      <p class="text-slate-500">1 Juli {{ date('Y') }}</p>
+                                      <p class="text-slate-500">Tahun Ajaran {{ $data['ppdb_academic_year'] }}</p>
                                   </div>
                               </div>
                           </div>
@@ -391,10 +396,14 @@
                               dari
                               komunitas pendidikan berkualitas.</p>
                           <div class="flex flex-col md:flex-row gap-4 justify-center">
+                              @if ($data['ppdb_open'])
                               <a href="{{ route('register.form') }}"
                                   class="bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-primary-900 px-8 py-4 rounded-full font-bold transition-all inline-flex items-center justify-center shadow-lg shadow-gold-500/30 hover:-translate-y-1">
                                   <i class="fas fa-user-plus mr-2"></i> Daftar Sekarang
                               </a>
+                              @else
+                              <div class="inline-flex items-center justify-center rounded-full bg-rose-100 px-8 py-4 font-bold text-rose-700"><i class="fas fa-lock mr-2"></i>Pendaftaran Ditutup</div>
+                              @endif
                               <a href="{{ route('login.form') }}"
                                   class="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full font-bold transition-all inline-flex items-center justify-center border border-white/20 backdrop-blur-sm hover:-translate-y-1">
                                   <i class="fas fa-sign-in-alt mr-2 text-gold-400"></i> Masuk ke Akun

@@ -23,30 +23,12 @@
 
         $allData = collect();
 
-        // JIKA DATABASE KOSONG -> Gunakan Data Dummy Sesuai Poster
+        // Saat database kosong, tampilkan placeholder tanpa membuat data organisasi.
         if ($isTreeEmpty) {
-            $root = (object) ['id' => 1, 'nama' => 'DRS. IMAM BASORI', 'jabatan' => 'Kepala Sekolah', 'foto' => null];
-            $komite = (object) ['id' => 2, 'nama' => '', 'jabatan' => 'KOMITE SEKOLAH', 'foto' => null];
-            $ktu = (object) ['id' => 3, 'nama' => 'DIDIK SUBIYANTORO', 'jabatan' => 'KTU', 'foto' => null];
-
-            $mainStaff = collect([
-                (object) ['id' => 4, 'nama' => 'Samiran, S.Pd', 'jabatan' => 'WAKA SARPRAS', 'foto' => null],
-                (object) [
-                    'id' => 5,
-                    'nama' => "Moh. In'am Fathur Riza, S.Pd",
-                    'jabatan' => 'WAKA KESISWAAN',
-                    'foto' => null,
-                ],
-                (object) ['id' => 6, 'nama' => 'Drs. Cahyo Sumargo', 'jabatan' => 'WAKA SARPRAS', 'foto' => null],
-                (object) ['id' => 7, 'nama' => 'Sunhaji, S.Pd', 'jabatan' => 'WAKA HUMAS', 'foto' => null],
-                (object) ['id' => 8, 'nama' => 'Drs. Sinar Agus', 'jabatan' => 'PENJAS SNP', 'foto' => null],
-                (object) [
-                    'id' => 9,
-                    'nama' => 'Siti Qotidjah N.K., S.Pd',
-                    'jabatan' => 'KEPALA PERPUS',
-                    'foto' => null,
-                ],
-            ]);
+            $root = null;
+            $komite = null;
+            $ktu = null;
+            $mainStaff = collect();
         }
         // JIKA ADA DATA DARI ADMIN -> Proses secara dinamis (flat collection)
         else {
