@@ -2,11 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
-class Controller extends BaseController
+abstract class Controller
 {
-    use AuthorizesRequests, ValidatesRequests;
+    /**
+     * Simpan file unggahan ke disk public, hapus file lama bila ada.
+     */
+    protected function storeUpload(UploadedFile $file, string $dir, ?string $old = null): string
+    {
+        $this->deleteUpload($old);
+
+        return $file->store($dir, 'public');
+    }
+
+    protected function deleteUpload(?string $path): void
+    {
+        // Aset bawaan di public/images tidak ikut dihapus
+        if ($path && ! Str::startsWith($path, ['images/', 'http://', 'https://'])) {
+            Storage::disk('public')->delete($path);
+        }
+    }
 }

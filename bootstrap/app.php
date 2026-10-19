@@ -14,8 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\CekRole::class,
             'maintenance' => \App\Http\Middleware\CheckMaintenanceMode::class,
-            'cek.pendaftar' => \App\Http\Middleware\CekPendaftarSudahAda::class,
         ]);
+        $middleware->redirectGuestsTo(fn () => route('login'));
+        $middleware->redirectUsersTo(fn () => route('admin.dashboard'));
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

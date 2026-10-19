@@ -7,11 +7,17 @@ use Illuminate\Support\Facades\Auth;
 
 class CekRole
 {
-    public function handle($request, Closure $next, $role)
+    /**
+     * Pemakaian: ->middleware('role:admin') atau ->middleware('role:admin,operator')
+     */
+    public function handle($request, Closure $next, string ...$roles)
     {
-        if (Auth::user()->role !== $role) {
-            abort(403, "Anda tidak punya akses!");
+        $user = Auth::user();
+
+        if (! $user || ! in_array($user->role, $roles, true)) {
+            abort(403, 'Anda tidak punya akses ke halaman ini.');
         }
+
         return $next($request);
     }
 }

@@ -11,20 +11,13 @@ class CheckMaintenanceMode
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $enabled = Setting::get('system.maintenance.enabled', false);
-        $enabled = filter_var($enabled, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-        $enabled = $enabled ?? false;
+        $enabled = filter_var(Setting::get('system.maintenance', false), FILTER_VALIDATE_BOOLEAN);
 
-        if (! $enabled) {
+        // Pengguna yang sudah login (admin/operator) tetap bisa melihat situs
+        if (! $enabled || $request->user()) {
             return $next($request);
         }
 
-        // Biar admin tetap bisa akses halaman admin saat maintenance
-        if ($request->is('admin/*')) {
-            return $next($request);
-        }
-
-        return response()->view('maintenance', ['enabled' => true], 503);
+        return response()->view('maintenance', [], 503);
     }
 }
-

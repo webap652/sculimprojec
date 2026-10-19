@@ -10,11 +10,17 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public const ROLES = [
+        'admin' => 'Admin',
+        'operator' => 'Operator',
+    ];
+
     protected $fillable = [
         'name',
         'email',
         'password',
         'role',
+        'is_active',
     ];
 
     protected $hidden = [
@@ -25,22 +31,26 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_active' => 'boolean',
     ];
 
-    // Relationship dengan Pendaftar
-    public function pendaftar()
+    public function posts()
     {
-        return $this->hasOne(Pendaftar::class);
+        return $this->hasMany(Post::class);
     }
 
-    // Check role
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }
 
-    public function isSiswa()
+    public function isOperator(): bool
     {
-        return $this->role === 'siswa';
+        return $this->role === 'operator';
+    }
+
+    public function getRoleLabelAttribute(): string
+    {
+        return self::ROLES[$this->role] ?? ucfirst((string) $this->role);
     }
 }

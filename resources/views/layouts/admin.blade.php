@@ -1,291 +1,141 @@
-{{-- Layout Admin dengan sidebar --}}
+@php
+    $adminSiteName = setting('site.name', 'SMP Negeri 1 Pirime');
+    $adminLogo = \App\Models\Setting::url('site.logo', 'images/logo sekolah.png');
+    $authUser = auth()->user();
+
+    $menu = [
+        ['Dasbor', 'admin.dashboard', 'fa-gauge', 'admin.dashboard', false],
+        ['Informasi', 'admin.posts.index', 'fa-newspaper', 'admin.posts.*', false],
+        ['Kategori', 'admin.categories.index', 'fa-tags', 'admin.categories.*', true],
+        ['Halaman', 'admin.pages.index', 'fa-file-lines', 'admin.pages.*', true],
+        ['Akun & Operator', 'admin.users.index', 'fa-users', 'admin.users.*', true],
+        ['Pengaturan Situs', 'admin.settings.edit', 'fa-gear', 'admin.settings.*', true],
+    ];
+@endphp
 <!DOCTYPE html>
 <html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title', 'Dasbor') | {{ $adminSiteName }}</title>
+    <link rel="icon" href="{{ $adminLogo }}">
 
-    @php
-        use App\Models\Setting;
-        $adminLogo = Setting::getAssetUrl('school.assets.logo', 'images/logo sekolah.png');
-        $adminSchoolName = Setting::get('school.identity.name', 'SMP NEGERI 1 PIRIME');
-    @endphp
-    <title>@yield('title', 'Dashboard Admin') | {{ $adminSchoolName }}</title>
-    <link rel="icon" href="{{ $adminLogo }}" type="image/png">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    {{-- Tailwind CSS --}}
-    <script src="https://cdn.tailwindcss.com"></script>
-
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        primary: {
-                            50: '#eef3f8',
-                            100: '#dce6f0',
-                            500: '#2e5070',
-                            600: '#1f3f5e',
-                            700: '#173a63',
-                            900: '#0a2540',
-                        },
-                    }
-                }
-            }
-        }
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { primary: { 50: '#eef3f8', 100: '#dce6f0', 600: '#1f3f5e', 700: '#173a63', 800: '#0f2c4a', 900: '#0a2540' } },
+                },
+            },
+        };
     </script>
-
-    <style>
-        [class~="bg-indigo-600"], [class~="bg-blue-600"] { background-color: #173A63 !important; }
-        [class~="bg-indigo-700"], [class~="bg-blue-700"] { background-color: #0A2540 !important; }
-        [class~="text-indigo-600"], [class~="text-blue-600"] { color: #173A63 !important; }
-        [class~="text-indigo-700"], [class~="text-blue-700"] { color: #0A2540 !important; }
-        [class~="border-indigo-600"], [class~="border-blue-600"] { border-color: #D4AF37 !important; }
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+    <style type="text/tailwindcss">
+        @layer components {
+            .card { @apply bg-white border border-slate-200 rounded-xl; }
+            .label { @apply block text-sm font-medium text-slate-700 mb-1; }
+            .input { @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-700/20 focus:border-primary-700; }
+            .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition; }
+            .btn-primary { @apply btn bg-primary-900 text-white hover:bg-primary-700; }
+            .btn-light { @apply btn bg-white border border-slate-300 text-slate-700 hover:bg-slate-50; }
+            .btn-icon { @apply inline-flex items-center justify-center w-8 h-8 rounded-md text-slate-500 hover:bg-slate-100; }
+            .error { @apply mt-1 text-xs text-red-600; }
+            .th { @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500; }
+            .td { @apply px-4 py-3 text-sm; }
+            .badge { @apply inline-flex items-center rounded px-2 py-0.5 text-xs font-medium; }
         }
     </style>
+    @stack('head')
 </head>
 
 <body class="font-sans antialiased bg-slate-100 text-slate-800">
-
-    <div class="min-h-screen flex">
+    <div class="min-h-screen lg:flex">
         {{-- Sidebar --}}
-        <aside class="w-64 bg-slate-900 text-slate-100 hidden md:flex md:flex-col overflow-y-auto">
-            <div class="px-5 py-5 border-b border-slate-800 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-hidden">
-                <img src="{{ $adminLogo }}" alt="Logo {{ $adminSchoolName }}" class="h-full w-full object-contain p-1">
-                </div>
-                <div>
-                    <div class="font-bold text-sm leading-tight">Admin Panel</div>
-                    <div class="text-xs text-slate-400">{{ $adminSchoolName }}</div>
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 z-40 w-64 bg-primary-900 text-slate-200 flex flex-col -translate-x-full lg:translate-x-0 lg:static transition-transform">
+            <div class="h-16 px-5 flex items-center gap-3 border-b border-white/10">
+                <img src="{{ $adminLogo }}" alt="Logo" class="w-8 h-8 object-contain">
+                <div class="min-w-0">
+                    <div class="text-sm font-semibold text-white truncate">{{ $adminSiteName }}</div>
+                    <div class="text-[11px] text-slate-400">Panel {{ $authUser->role_label }}</div>
                 </div>
             </div>
 
-            <nav class="px-3 py-4 space-y-1 flex-1">
-                @php
-                    use Illuminate\Support\Facades\Route;
-                    $current = Route::currentRouteName();
-                @endphp
-
-                {{-- Dashboard --}}
-                <a href="{{ route('admin.dashboard') }}"
-                    class="flex items-center px-3 py-2 rounded-lg text-sm font-semibold transition-colors {{ str_starts_with($current, 'admin.dashboard') ? 'bg-primary-600 text-white' : 'text-slate-200 hover:bg-slate-800' }}">
-                    <i class="fas fa-gauge mr-2"></i>
-                    Dashboard
-                </a>
-
-                {{-- Profil Sekolah Group --}}
-                <div class="pt-4 pb-1 px-3 text-xs text-slate-500 uppercase tracking-wider font-bold">Profil Sekolah
-                </div>
-
-                <a href="{{ route('admin.system-settings.edit') }}"
-                    class="flex items-center px-3 py-2 rounded-lg text-sm font-semibold transition-colors {{ $current === 'admin.system-settings.edit' ? 'bg-primary-600 text-white' : 'text-slate-200 hover:bg-slate-800' }}">
-                    <i class="fas fa-gear mr-2"></i>
-                    Pengaturan Website
-                </a>
-
-                <a href="{{ route('admin.guru.index') }}"
-                    class="flex items-center px-3 py-2 rounded-lg text-sm font-semibold transition-colors {{ str_starts_with($current, 'admin.guru') ? 'bg-primary-600 text-white' : 'text-slate-200 hover:bg-slate-800' }}">
-                    <i class="fas fa-chalkboard-user mr-2"></i>
-                    Guru
-                </a>
-
-                <a href="{{ route('admin.fasilitas.index') }}"
-                    class="flex items-center px-3 py-2 rounded-lg text-sm font-semibold transition-colors {{ str_starts_with($current, 'admin.fasilitas') ? 'bg-primary-600 text-white' : 'text-slate-200 hover:bg-slate-800' }}">
-                    <i class="fas fa-building mr-2"></i>
-                    Fasilitas
-                </a>
-
-                <a href="{{ route('admin.prestasi.index') }}"
-                    class="flex items-center px-3 py-2 rounded-lg text-sm font-semibold transition-colors {{ str_starts_with($current, 'admin.prestasi') ? 'bg-primary-600 text-white' : 'text-slate-200 hover:bg-slate-800' }}">
-                    <i class="fas fa-trophy mr-2"></i>
-                    Prestasi
-                </a>
-
-                <a href="{{ route('admin.sejarah.index') }}"
-                    class="flex items-center px-3 py-2 rounded-lg text-sm font-semibold transition-colors {{ str_starts_with($current, 'admin.sejarah') ? 'bg-primary-600 text-white' : 'text-slate-200 hover:bg-slate-800' }}">
-                    <i class="fas fa-clock-rotate-left mr-2"></i>
-                    Sejarah
-                </a>
-
-                <a href="{{ route('admin.struktur-organisasi.index') }}"
-                    class="flex items-center px-3 py-2 rounded-lg text-sm font-semibold transition-colors {{ str_starts_with($current, 'admin.struktur-organisasi') ? 'bg-primary-600 text-white' : 'text-slate-200 hover:bg-slate-800' }}">
-                    <i class="fas fa-sitemap mr-2"></i>
-                    Struktur Organisasi
-                </a>
-
-                <a href="{{ route('admin.galeri.index') }}"
-                    class="flex items-center px-3 py-2 rounded-lg text-sm font-semibold transition-colors {{ str_starts_with($current, 'admin.galeri') ? 'bg-primary-600 text-white' : 'text-slate-200 hover:bg-slate-800' }}">
-                    <i class="fas fa-images mr-2"></i>
-                    Galeri
-                </a>
-
-                {{-- PPDB Group --}}
-                <div class="pt-4 pb-1 px-3 text-xs text-slate-500 uppercase tracking-wider font-bold">PPDB</div>
-
-                <a href="{{ route('admin.pendaftar') }}"
-                    class="flex items-center px-3 py-2 rounded-lg text-sm font-semibold transition-colors {{ $current === 'admin.pendaftar' ? 'bg-primary-600 text-white' : 'text-slate-200 hover:bg-slate-800' }}">
-                    <i class="fas fa-users mr-2"></i>
-                    Pendaftar
-                </a>
-
-                <a href="{{ route('admin.laporan') }}"
-                    class="flex items-center px-3 py-2 rounded-lg text-sm font-semibold transition-colors {{ $current === 'admin.laporan' ? 'bg-primary-600 text-white' : 'text-slate-200 hover:bg-slate-800' }}">
-                    <i class="fas fa-file-export mr-2"></i>
-                    Laporan
-                </a>
-
-                {{-- Konten Group --}}
-                <div class="pt-4 pb-1 px-3 text-xs text-slate-500 uppercase tracking-wider font-bold">Konten</div>
-
-                <a href="{{ route('admin.pengumuman') }}"
-                    class="flex items-center px-3 py-2 rounded-lg text-sm font-semibold transition-colors {{ str_starts_with($current, 'admin.pengumuman') ? 'bg-primary-600 text-white' : 'text-slate-200 hover:bg-slate-800' }}">
-                    <i class="fas fa-bullhorn mr-2"></i>
-                    Pengumuman
-                </a>
-
+            <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+                @foreach ($menu as [$label, $route, $icon, $pattern, $adminOnly])
+                    @continue($adminOnly && ! $authUser->isAdmin())
+                    <a href="{{ route($route) }}"
+                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs($pattern) ? 'bg-white/10 text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
+                        <i class="fas {{ $icon }} w-4 text-center"></i> {{ $label }}
+                    </a>
+                @endforeach
             </nav>
 
-            <div class="px-3 pb-4">
-                <a href="{{ route('home') }}" target="_blank"
-                    class="flex items-center px-3 py-2 rounded-lg text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
-                    <i class="fas fa-external-link-alt mr-2"></i>
-                    Lihat Website
+            <div class="px-3 py-4 border-t border-white/10 space-y-1">
+                <a href="{{ route('admin.profile.edit') }}"
+                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm {{ request()->routeIs('admin.profile.*') ? 'bg-white/10 text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
+                    <i class="fas fa-circle-user w-4 text-center"></i>
+                    <span class="truncate">{{ $authUser->name }}</span>
                 </a>
-                <div class="px-3 py-3 text-xs text-slate-400 border border-slate-800 rounded-xl mt-2">
-                    <div class="font-semibold text-slate-200">{{ $adminSchoolName }}</div>
-                    <div class="mt-1">Pirime, Lanny Jaya, Papua Pegunungan</div>
-                </div>
+                <a href="{{ route('home') }}" target="_blank" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-white/5 hover:text-white">
+                    <i class="fas fa-arrow-up-right-from-square w-4 text-center"></i> Lihat Situs
+                </a>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-white/5 hover:text-white">
+                        <i class="fas fa-right-from-bracket w-4 text-center"></i> Keluar
+                    </button>
+                </form>
             </div>
         </aside>
+        <div id="sidebar-backdrop" class="fixed inset-0 z-30 bg-black/40 hidden lg:hidden"></div>
 
-        {{-- Content wrapper --}}
-        <div class="flex-1 flex flex-col">
-            {{-- Topbar --}}
-            <header class="bg-white border-b border-slate-200">
-                <div class="px-4 sm:px-6 py-4 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <button id="mobileSidebarToggle"
-                            class="md:hidden w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition"
-                            onclick="toggleMobileSidebar()">
-                            <i class="fas fa-bars text-slate-700"></i>
-                        </button>
-                        <div>
-                            <div class="font-extrabold text-slate-900">@yield('pageTitle', 'Dashboard')</div>
-                            <div class="text-xs text-slate-500">Selamat datang kembali.</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2">
-                        <a href="{{ route('logout') }}"
-                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                            class="inline-flex items-center px-3 py-2 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 transition text-sm font-semibold">
-                            <i class="fas fa-sign-out-alt mr-2"></i>
-                            Logout
-                        </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                            @csrf
-                        </form>
-                    </div>
+        {{-- Konten --}}
+        <div class="flex-1 min-w-0 flex flex-col">
+            <header class="h-16 bg-white border-b border-slate-200 px-4 lg:px-8 flex items-center justify-between gap-4 sticky top-0 z-20">
+                <div class="flex items-center gap-3 min-w-0">
+                    <button type="button" id="sidebar-toggle" class="lg:hidden btn-icon" aria-label="Menu"><i class="fas fa-bars"></i></button>
+                    <h1 class="text-base font-semibold truncate">@yield('title', 'Dasbor')</h1>
                 </div>
+                <div class="flex items-center gap-2">@yield('actions')</div>
             </header>
 
-            {{-- Mobile Sidebar Overlay --}}
-            <div id="mobileSidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"
-                onclick="toggleMobileSidebar()"></div>
-            <aside id="mobileSidebar"
-                class="fixed top-0 left-0 h-full w-64 bg-slate-900 text-slate-100 z-50 transform -translate-x-full transition-transform md:hidden overflow-y-auto">
-                <div class="px-5 py-5 border-b border-slate-800 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center overflow-hidden">
-                            <img src="{{ $adminLogo }}" alt="Logo {{ $adminSchoolName }}" class="h-full w-full object-contain p-1">
-                        </div>
-                        <div>
-                            <div class="font-bold text-sm leading-tight">Admin Panel</div>
-                            <div class="text-xs text-slate-400">{{ $adminSchoolName }}</div>
-                        </div>
-                    </div>
-                    <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white p-1">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <nav class="px-3 py-4 space-y-1">
-                    <a href="{{ route('admin.dashboard') }}"
-                        class="flex items-center px-3 py-2 rounded-lg text-sm font-semibold text-slate-200 hover:bg-slate-800"><i
-                            class="fas fa-gauge mr-2"></i>Dashboard</a>
-                    <div class="pt-3 pb-1 px-3 text-xs text-slate-500 uppercase font-bold">Profil</div>
-                    <a href="{{ route('admin.system-settings.edit') }}"
-                        class="flex items-center px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-slate-800"><i
-                            class="fas fa-gear mr-2"></i>Pengaturan</a>
-                    <a href="{{ route('admin.guru.index') }}"
-                        class="flex items-center px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-slate-800"><i
-                            class="fas fa-chalkboard-user mr-2"></i>Guru</a>
-                    <a href="{{ route('admin.fasilitas.index') }}"
-                        class="flex items-center px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-slate-800"><i
-                            class="fas fa-building mr-2"></i>Fasilitas</a>
-                    <a href="{{ route('admin.prestasi.index') }}"
-                        class="flex items-center px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-slate-800"><i
-                            class="fas fa-trophy mr-2"></i>Prestasi</a>
-                    <a href="{{ route('admin.sejarah.index') }}"
-                        class="flex items-center px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-slate-800"><i
-                            class="fas fa-clock-rotate-left mr-2"></i>Sejarah</a>
-                    <a href="{{ route('admin.struktur-organisasi.index') }}"
-                        class="flex items-center px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-slate-800"><i
-                            class="fas fa-sitemap mr-2"></i>Struktur</a>
-                    <a href="{{ route('admin.galeri.index') }}"
-                        class="flex items-center px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-slate-800"><i
-                            class="fas fa-images mr-2"></i>Galeri</a>
-                    <div class="pt-3 pb-1 px-3 text-xs text-slate-500 uppercase font-bold">PPDB</div>
-                    <a href="{{ route('admin.pendaftar') }}"
-                        class="flex items-center px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-slate-800"><i
-                            class="fas fa-users mr-2"></i>Pendaftar</a>
-                    <a href="{{ route('admin.laporan') }}"
-                        class="flex items-center px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-slate-800"><i
-                            class="fas fa-file-export mr-2"></i>Laporan</a>
-                    <div class="pt-3 pb-1 px-3 text-xs text-slate-500 uppercase font-bold">Konten</div>
-                    <a href="{{ route('admin.pengumuman') }}"
-                        class="flex items-center px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-slate-800"><i
-                            class="fas fa-bullhorn mr-2"></i>Pengumuman</a>
-                </nav>
-            </aside>
+            <main class="flex-1 p-4 lg:p-8">
+                @foreach (['success' => 'bg-emerald-50 border-emerald-200 text-emerald-800', 'error' => 'bg-red-50 border-red-200 text-red-800'] as $type => $cls)
+                    @if (session($type))
+                        <div class="mb-6 rounded-lg border px-4 py-3 text-sm {{ $cls }}">{{ session($type) }}</div>
+                    @endif
+                @endforeach
 
-            <script>
-                function toggleMobileSidebar() {
-                    document.getElementById('mobileSidebar').classList.toggle('-translate-x-full');
-                    document.getElementById('mobileSidebarOverlay').classList.toggle('hidden');
-                }
-            </script>
-
-            <main class="flex-1 p-4 sm:p-6 lg:p-8">
                 @yield('content')
             </main>
-
-            @stack('scripts')
         </div>
     </div>
 
+    <script>
+        (function () {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            const toggle = (open) => {
+                sidebar.classList.toggle('-translate-x-full', !open);
+                backdrop.classList.toggle('hidden', !open);
+            };
+            document.getElementById('sidebar-toggle')?.addEventListener('click', () => toggle(true));
+            backdrop.addEventListener('click', () => toggle(false));
+
+            // Konfirmasi sebelum hapus
+            document.addEventListener('submit', (e) => {
+                const msg = e.target.dataset.confirm;
+                if (msg && !confirm(msg)) e.preventDefault();
+            });
+        })();
+    </script>
+    @stack('scripts')
 </body>
 
 </html>

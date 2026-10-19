@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,19 +12,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Idempotent: aman dijalankan berulang kali
+        User::updateOrCreate(['email' => 'admin@smpn1pirime.sch.id'], [
+            'name' => 'Administrator',
+            'password' => 'password',
+            'role' => 'admin',
+            'is_active' => true,
+        ]);
 
-        // Idempotent seeder: hindari duplicate insert saat `migrate --seed` dijalankan berkali-kali
-     User::factory()->create([
-    'name' => 'Test User',
-    'email' => 'test@example.com',
-    'password' => bcrypt('password123'),
-]);
+        User::updateOrCreate(['email' => 'operator@smpn1pirime.sch.id'], [
+            'name' => 'Operator Sekolah',
+            'password' => 'password',
+            'role' => 'operator',
+            'is_active' => true,
+        ]);
 
-
-
-        // Dummy awal untuk System Settings
-        $this->call(\Database\Seeders\SettingsSeeder::class);
+        $this->call([
+            SettingSeeder::class,
+            CategorySeeder::class,
+            PageSeeder::class,
+            PostSeeder::class,
+        ]);
     }
 }
-

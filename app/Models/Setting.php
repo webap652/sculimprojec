@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
 
 class Setting extends Model
 {
@@ -19,19 +19,29 @@ class Setting extends Model
         'value' => 'array',
     ];
 
-    public static function get(string $key, $default = null): mixed
+    /** Seluruh pengaturan dimuat sekali per request (disimpan di container). */
+    protected static function loadAll(): array
     {
-        $setting = static::query()->where('key', $key)->first();
+        if (! app()->bound('settings.loaded')) {
+            try {
+                $loaded = static::query()->pluck('value', 'key')
+                    ->map(fn ($v) => is_array($v) && array_key_exists('value', $v) ? $v['value'] : $v)
+                    ->all();
+            } catch (\Throwable) {
+                $loaded = [];
+            }
 
-        if (!$setting) {
-            return $default;
+            app()->instance('settings.loaded', $loaded);
         }
 
-        $value = $setting->value;
+        return app('settings.loaded');
+    }
 
-        // value bisa berupa array/boolean/number jika type disimpan berbeda.
-        // Untuk keamanan, jika bukan array, kembalikan apa adanya.
-        return is_array($value) ? ($value['value'] ?? $default) : $value;
+    public static function get(string $key, $default = null): mixed
+    {
+        $value = static::loadAll()[$key] ?? null;
+
+        return ($value === null || $value === '') ? $default : $value;
     }
 
     public static function set(string $key, mixed $value): void
@@ -40,65 +50,13 @@ class Setting extends Model
             ['key' => $key],
             ['value' => ['value' => $value]]
         );
+
+        app()->forgetInstance('settings.loaded');
+        app()->forgetInstance('site.shared');
     }
 
-    public static function ppdbAcademicYear(): string
+    public static function url(string $key, ?string $default = null): ?string
     {
-        return (string) static::get('ppdb_academic_year', '2026/2027');
-    }
-
-    public static function ppdbCloseMessage(): string
-    {
-        return (string) static::get(
-            'ppdb_close_message',
-            'Pendaftaran PPDB/SPMB Tahun Ajaran ' . static::ppdbAcademicYear() . ' saat ini telah ditutup. Mohon menunggu informasi pendaftaran peserta didik baru berikutnya. Terima kasih atas perhatian dan pengertiannya.'
-        );
-    }
-
-    public static function ppdbIsOpen(): bool
-    {
-        if (!filter_var(static::get('ppdb_open', true), FILTER_VALIDATE_BOOLEAN)) {
-            return false;
-        }
-
-        $now = now();
-        $startDate = static::get('ppdb_start_date');
-        $endDate = static::get('ppdb_end_date');
-
-        if ($startDate && $now->lt(Carbon::parse($startDate)->startOfDay())) {
-            return false;
-        }
-
-        if ($endDate && $now->gt(Carbon::parse($endDate)->endOfDay())) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Get asset URL from settings, supports both public/ and storage/ paths
-     */
-    public static function getAssetUrl(string $key, $default = null): string
-    {
-        $path = static::get($key, $default);
-
-        if (empty($path)) {
-            return asset($default ?? '');
-        }
-
-        // If path starts with 'images/' or 'storage/' already, return as is
-        if (str_starts_with($path, 'images/') || str_starts_with($path, 'admin-assets/')) {
-            return asset($path);
-        }
-
-        // If path starts with 'storage/', it's already full URL
-        if (str_starts_with($path, 'storage/')) {
-            return asset($path);
-        }
-
-        // Default: asset with storage prefix for uploaded files
-        return asset('storage/' . $path);
+        return media_url(static::get($key), $default);
     }
 }
-
